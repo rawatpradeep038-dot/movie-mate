@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import MovieCard from '../components/MovieCard';
 import { fetchTrending, fetchPopular, searchMovies } from '../utils/api';
-import '../styles/pages.css';
+
 
 const HomePage = ({ 
   movies, 

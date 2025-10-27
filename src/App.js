@@ -6,10 +6,7 @@ import WatchlistPage from './pages/WatchlistPage';
 import MovieDetailPage from './pages/MovieDetailPage';
 import createStore from './redux/store';
 import movieReducer from './redux/movieReducer';
-import './styles/index.css';
-import './styles/header.css';
-import './styles/movieCard.css';
-import './styles/pages.css';
+
 
 // Create Redux store
 const initialState = {

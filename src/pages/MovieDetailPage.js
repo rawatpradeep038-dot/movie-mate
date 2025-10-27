@@ -1,7 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { Link } from '../router/Router';
 import { fetchMovieDetails, getImageUrl } from '../utils/api';
-import '../styles/pages.css';
 
 const MovieDetailPage = ({ params, watchlist, dispatch }) => {
   const [movie, setMovie] = useState(null);
@@ -10,14 +9,24 @@ const MovieDetailPage = ({ params, watchlist, dispatch }) => {
 
   useEffect(() => {
     const loadMovie = async () => {
-      if (!params?.id) return;
+      // Get ID from params or from URL hash
+      const id = params?.id || window.location.hash.split('/').pop();
+      
+      console.log('🎬 Loading movie with ID:', id); // Debug log
+      
+      if (!id) {
+        console.error('❌ No movie ID found');
+        setLoading(false);
+        return;
+      }
       
       setLoading(true);
       try {
-        const data = await fetchMovieDetails(params.id);
+        const data = await fetchMovieDetails(id);
+        console.log('✅ Movie data loaded:', data);
         setMovie(data);
       } catch (error) {
-        console.error('Error loading movie details:', error);
+        console.error('❌ Error loading movie details:', error);
       }
       setLoading(false);
     };
@@ -44,7 +53,7 @@ const MovieDetailPage = ({ params, watchlist, dispatch }) => {
     return (
       <div className="loading-container">
         <div className="spinner"></div>
-        <p className="loading-text">Loading movie details...</p>
+        <p className="loading-text">Loading details...</p>
       </div>
     );
   }
@@ -95,16 +104,18 @@ const MovieDetailPage = ({ params, watchlist, dispatch }) => {
             <div className="detail-tags">
               <span className="detail-tag">
                 <span>⭐</span>
-                {movie.vote_average?.toFixed(1)}/10
+                {movie.vote_average?.toFixed(1) || 'N/A'}/10
               </span>
               <span className="detail-tag">
                 <span>📅</span>
                 {year}
               </span>
-              <span className="detail-tag">
-                <span>⏱️</span>
-                {movie.runtime} min
-              </span>
+              {movie.runtime && (
+                <span className="detail-tag">
+                  <span>⏱️</span>
+                  {movie.runtime}
+                </span>
+              )}
             </div>
 
             <p className="detail-overview">{movie.overview || 'No description available.'}</p>
@@ -125,7 +136,7 @@ const MovieDetailPage = ({ params, watchlist, dispatch }) => {
 
             {movie.genres && movie.genres.length > 0 && (
               <div style={{ marginTop: '2rem' }}>
-                <h3 style={{ marginBottom: '1rem', color: '#666' }}>Genres</h3>
+                <h3 style={{ marginBottom: '1rem', color: 'var(--text-secondary)' }}>Genres</h3>
                 <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
                   {movie.genres.map(genre => (
                     <span key={genre.id} className="movie-genre">

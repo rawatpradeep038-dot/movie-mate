@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from '../router/Router';
-import '../styles/header.css';
+
 
 const Navigation = ({ currentRoute }) => {
   return (

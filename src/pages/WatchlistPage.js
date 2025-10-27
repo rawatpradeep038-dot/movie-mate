@@ -1,7 +1,7 @@
 import React from 'react';
 import MovieCard from '../components/MovieCard';
 import { Link } from '../router/Router';
-import '../styles/pages.css';
+
 
 const WatchlistPage = ({ watchlist, dispatch }) => {
   const handleToggleWatchlist = (movie) => {

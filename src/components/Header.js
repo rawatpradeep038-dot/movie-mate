@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from '../router/Router';
 import SearchBar from './SearchBar';
 import Navigation from './Navigation';
-import '../styles/header.css';
+
 
 const Header = ({ searchQuery, onSearchChange, onSearchClear, currentRoute }) => {
   return (
