@@ -24,7 +24,7 @@ const MovieCard = ({ movie, inWatchlist, onToggleWatchlist }) => {
   };
 
   const posterUrl = getImageUrl(movie.poster_path);
-  const year = movie.release_date ? new Date(movie.release_date).getFullYear() : 'N/A';
+  const year = movie.release_date || 'N/A';
 
   return (
     <Link to={`/movie/${movie.id}`} className="movie-card" ref={cardRef}>

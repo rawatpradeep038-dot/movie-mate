@@ -63,7 +63,7 @@ const MovieDetailPage = ({ params, watchlist, dispatch }) => {
 
   const inWatchlist = watchlist.some(m => m.id === movie.id);
   const posterUrl = getImageUrl(movie.poster_path);
-  const year = movie.release_date ? new Date(movie.release_date).getFullYear() : 'N/A';
+  const year = movie.release_date || 'N/A';
 
   const handleToggleWatchlist = () => {
     if (inWatchlist) {
