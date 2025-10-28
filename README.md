@@ -17,7 +17,7 @@ A modern, responsive web application built with React for browsing trending movi
 
 <div align="center">
   <img src="src/movie-mate.gif" alt="movie-mate" width="100%"/>
-  <p><em>Complete feature demonstration of the Todo Application</em></p>
+  <p><em>Complete feature demonstration of the Movie Mate</em></p>
 </div>
 
 
