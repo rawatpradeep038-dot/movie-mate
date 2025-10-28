@@ -15,12 +15,11 @@ A modern, responsive web application built with React for browsing trending movi
 
 ## 🚀 Demo
 
-![MovieMate Demo](https://via.placeholder.com/800x600/e0f7fa/1e293b?text=Add+Your+Demo+GIF+Here)
+<div align="center">
+  <img src="src/movie-mate.gif" alt="movie-mate" width="100%"/>
+  <p><em>Complete feature demonstration of the Todo Application</em></p>
+</div>
 
-*To add your own demo GIF:*
-1. Record your screen using [Loom](https://www.loom.com/), [ScreenToGif](https://www.screentogif.com/), or [Gifox](https://gifox.app/)
-2. Upload to your repository in a `demo` folder
-3. Replace the placeholder link above with: `./demo/moviemate-demo.gif`
 
 ## 🛠️ Technologies Used
 

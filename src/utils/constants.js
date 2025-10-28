@@ -1,9 +1,9 @@
-export const API_KEY = process.env.REACT_APP_OMDB_API_KEY;
-export const BASE_URL = process.env.REACT_APP_OMDB_BASE_URL;
-
-console.log('🔑 API Key loaded:', API_KEY ? 'YES ✅' : 'NO ❌');
+// TVMaze API - No API key required!
+export const BASE_URL = 'https://api.tvmaze.com';
 
 export const API_ENDPOINTS = {
-  search: (query) => `/?apikey=${API_KEY}&s=${query}&type=movie`,
-  movieDetail: (id) => `/?apikey=${API_KEY}&i=${id}&plot=full`,
+  search: (query) => `/search/shows?q=${query}`,
+  showDetail: (id) => `/shows/${id}`,
 };
+
+console.log('🌐 API Base URL:', BASE_URL);
