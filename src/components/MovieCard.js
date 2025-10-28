@@ -2,13 +2,14 @@ import React, { useRef } from 'react';
 import { Link } from '../router/Router';
 import { getImageUrl } from '../utils/api';
 
-
 const MovieCard = ({ movie, inWatchlist, onToggleWatchlist }) => {
   const cardRef = useRef(null);
 
   const handleWatchlistClick = (e) => {
     e.preventDefault();
     e.stopPropagation();
+    
+    console.log('❤️ Watchlist button clicked for:', movie.title);
     
     // DOM Manipulation - Animation
     if (cardRef.current) {
@@ -27,35 +28,37 @@ const MovieCard = ({ movie, inWatchlist, onToggleWatchlist }) => {
   const year = movie.release_date || 'N/A';
 
   return (
-    <Link to={`/movie/${movie.id}`} className="movie-card" ref={cardRef}>
-      <div className="movie-poster-wrapper">
-        {posterUrl ? (
-          <img src={posterUrl} alt={movie.title} className="movie-poster" />
-        ) : (
-          <div className="movie-poster-placeholder">🎬</div>
-        )}
-        <div className="movie-badge">
-          <span>⭐</span>
-          <span>{movie.vote_average?.toFixed(1) || 'N/A'}</span>
+    <div className="movie-card" ref={cardRef}>
+      <Link to={`/movie/${movie.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
+        <div className="movie-poster-wrapper">
+          {posterUrl ? (
+            <img src={posterUrl} alt={movie.title} className="movie-poster" />
+          ) : (
+            <div className="movie-poster-placeholder">🎬</div>
+          )}
+          <div className="movie-badge">
+            <span>⭐</span>
+            <span>{movie.vote_average?.toFixed(1) || 'N/A'}</span>
+          </div>
         </div>
+        <div className="movie-info">
+          <h3 className="movie-title">{movie.title}</h3>
+          <div className="movie-meta">
+            <span className="movie-year">{year}</span>
+          </div>
+        </div>
+      </Link>
+      <div className="movie-footer" style={{ padding: '0 1rem 1rem' }}>
+        <span className="movie-genre">Movie</span>
+        <button
+          className={`watchlist-btn ${inWatchlist ? 'active' : ''}`}
+          onClick={handleWatchlistClick}
+          aria-label={inWatchlist ? 'Remove from watchlist' : 'Add to watchlist'}
+        >
+          {inWatchlist ? '❤️' : '🤍'}
+        </button>
       </div>
-      <div className="movie-info">
-        <h3 className="movie-title">{movie.title}</h3>
-        <div className="movie-meta">
-          <span className="movie-year">{year}</span>
-        </div>
-        <div className="movie-footer">
-          <span className="movie-genre">Movie</span>
-          <button
-            className={`watchlist-btn ${inWatchlist ? 'active' : ''}`}
-            onClick={handleWatchlistClick}
-            aria-label={inWatchlist ? 'Remove from watchlist' : 'Add to watchlist'}
-          >
-            {inWatchlist ? '❤️' : '🤍'}
-          </button>
-        </div>
-      </div>
-    </Link>
+    </div>
   );
 };
 
