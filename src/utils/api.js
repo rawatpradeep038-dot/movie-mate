@@ -1,109 +1,49 @@
-import { BASE_URL, API_ENDPOINTS, API_KEY } from './constants';
+const BASE_URL = 'https://api.tvmaze.com';
 
-// Popular movie IDs for demo
-const POPULAR_MOVIE_IDS = [
-  'tt0111161', // Shawshank Redemption
-  'tt0068646', // The Godfather
-  'tt0468569', // The Dark Knight
-  'tt0108052', // Schindler's List
-  'tt0167260', // LOTR: Return of the King
-  'tt0110912', // Pulp Fiction
-  'tt0120737', // LOTR: Fellowship
-  'tt0109830', // Forrest Gump
-  'tt1375666', // Inception
-  'tt0137523', // Fight Club
-  'tt0167261', // LOTR: Two Towers
-  'tt0080684', // Star Wars V
-];
-
-// Convert OMDb format to our app format
-const convertMovie = (movie) => ({
-  id: movie.imdbID,
-  title: movie.Title,
-  poster_path: movie.Poster !== 'N/A' ? movie.Poster : null,
-  release_date: movie.Year,
-  vote_average: movie.imdbRating ? parseFloat(movie.imdbRating) : 0,
-  overview: movie.Plot || 'No description available.',
-  runtime: movie.Runtime,
-  genres: movie.Genre ? movie.Genre.split(', ').map((name, id) => ({ id, name })) : [],
+const convertShow = (show) => ({
+  id: show.id,
+  title: show.name,
+  year: show.premiered ? new Date(show.premiered).getFullYear() : 'N/A',
+  rating: show.rating?.average || 0,
+  poster_path: show.image?.medium || show.image?.original,
+  overview: show.summary ? show.summary.replace(/<[^>]*>/g, '') : 'No description',
+  vote_average: show.rating?.average || 0,
+  release_date: show.premiered || '',
+  runtime: show.runtime || 0,
 });
 
 export const fetchTrending = async () => {
-  try {
-    const promises = POPULAR_MOVIE_IDS.slice(0, 4).map(id =>
-      fetch(`${BASE_URL}${API_ENDPOINTS.movieDetail(id)}`).then(r => r.json())
-    );
-    const results = await Promise.all(promises);
-    console.log('✅ Trending data loaded');
-    return results.filter(m => m.Response === 'True').map(convertMovie);
-  } catch (error) {
-    console.error('❌ Error fetching trending:', error);
-    return [];
+  const res = await fetch(`${BASE_URL}/schedule`);
+  const data = await res.json();
+  const unique = [];
+  const seen = new Set();
+  for (const item of data) {
+    if (item.show && !seen.has(item.show.id)) {
+      seen.add(item.show.id);
+      unique.push(convertShow(item.show));
+      if (unique.length >= 4) break;
+    }
   }
+  return unique;
 };
 
 export const fetchPopular = async () => {
-  try {
-    const promises = POPULAR_MOVIE_IDS.slice(0, 12).map(id =>
-      fetch(`${BASE_URL}${API_ENDPOINTS.movieDetail(id)}`).then(r => r.json())
-    );
-    const results = await Promise.all(promises);
-    console.log('✅ Popular data loaded');
-    return results.filter(m => m.Response === 'True').map(convertMovie);
-  } catch (error) {
-    console.error('❌ Error fetching popular:', error);
-    return [];
-  }
+  const res = await fetch(`${BASE_URL}/shows?page=0`);
+  const data = await res.json();
+  return data.slice(0, 12).map(convertShow);
 };
 
 export const searchMovies = async (query) => {
   if (!query) return [];
-  
-  try {
-    const url = `${BASE_URL}${API_ENDPOINTS.search(query)}`;
-    console.log('📡 Searching:', url);
-    
-    const response = await fetch(url);
-    const data = await response.json();
-    
-    if (data.Response === 'True' && data.Search) {
-      console.log('✅ Search results:', data.Search.length);
-      return data.Search.map(movie => ({
-        id: movie.imdbID,
-        title: movie.Title,
-        poster_path: movie.Poster !== 'N/A' ? movie.Poster : null,
-        release_date: movie.Year,
-        vote_average: 0,
-      }));
-    }
-    
-    return [];
-  } catch (error) {
-    console.error('❌ Error searching movies:', error);
-    return [];
-  }
+  const res = await fetch(`${BASE_URL}/search/shows?q=${query}`);
+  const data = await res.json();
+  return data.filter(i => i.show).map(i => convertShow(i.show));
 };
 
 export const fetchMovieDetails = async (id) => {
-  try {
-    const url = `${BASE_URL}${API_ENDPOINTS.movieDetail(id)}`;
-    console.log('📡 Fetching movie:', url);
-    
-    const response = await fetch(url);
-    const data = await response.json();
-    
-    if (data.Response === 'True') {
-      console.log('✅ Movie details loaded');
-      return convertMovie(data);
-    }
-    
-    return null;
-  } catch (error) {
-    console.error('❌ Error fetching movie details:', error);
-    return null;
-  }
+  const res = await fetch(`${BASE_URL}/shows/${id}`);
+  const data = await res.json();
+  return convertShow(data);
 };
 
-export const getImageUrl = (path) => {
-  return path;
-};
+export const getImageUrl = (path) => path || 'https://via.placeholder.com/210x295';
